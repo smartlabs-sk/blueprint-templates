@@ -105,7 +105,6 @@ action:
       target: !input media_player
     - delay: 1
   - conditions:
-    - '{{ trigger.event == None }}'
     - '{{ trigger.to_state.state != None }}'
     sequence:
     - service: linkplay.preset
