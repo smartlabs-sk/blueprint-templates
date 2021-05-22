@@ -50,7 +50,7 @@ action:
     - '{{ command == ''toggle'' }}'
     - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
-    - '{{ states.media_player.state == "playing" }}'
+    - '{{ states[media_player].state == "playing" }}'
     sequence:
     - service: media_player.media_pause
       entity_id: !input 'media_player'
@@ -59,12 +59,12 @@ action:
     - '{{ command == ''toggle'' }}'
     - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
-    - '{{ states.media_player.state != "playing" }}'
+    - '{{ states[media_player].state != "playing" }}'
     sequence:
     - service: linkplay.preset
       data:
         entity_id: '{{ media_player }}'
-        preset: '{{ states.input_select.state }}'
+        preset: '{{ states[input_select].state }}'
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
@@ -113,4 +113,4 @@ action:
     - service: linkplay.preset
       data:
         entity_id: '{{ media_player }}'
-        preset: '{{ states.input_select.state }}'
+        preset: '{{ states[input_select].state }}'
