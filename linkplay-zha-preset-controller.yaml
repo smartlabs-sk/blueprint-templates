@@ -11,9 +11,8 @@ blueprint:
       name: Linkplay Media player entity
       description: The entity of the Linkplay media player to be controlled.
       selector:
-        target:
-          entity:
-            domain: media_player
+        entity:
+          domain: media_player
     input_select:
       name: Preset helper selector
       description: A dropdown helper with the list of all presets for the media player.
@@ -54,7 +53,7 @@ action:
     - '{{ states.media_player.state == "playing" }}'
     sequence:
     - service: media_player.media_pause
-      target: !input 'media_player'
+      entity_id: !input 'media_player'
   - conditions:
     - '{{ trigger.id == 0 }}'
     - '{{ command == ''toggle'' }}'
@@ -74,8 +73,7 @@ action:
     - '{{ args == [0, 1, 0] }}'
     sequence:
     - service: input_select.select_next
-      target:
-        entity_id: !input input_select
+      entity_id: !input input_select
       data:
         cycle: true 
   - conditions:
@@ -86,8 +84,7 @@ action:
     - '{{ args == [1, 1, 0] }}'
     sequence:
     - service: input_select.select_previous
-      target:
-        entity_id: !input input_select
+      entity_id: !input input_select
       data:
         cycle: true 
   - conditions:
@@ -98,7 +95,7 @@ action:
     - '{{ args == [0, 195] }}'
     sequence:
     - service: media_player.volume_up
-      target: !input media_player
+      entity_id: !input media_player
     - delay: 1
   - conditions:
     - '{{ trigger.id == 0 }}'
@@ -108,7 +105,7 @@ action:
     - '{{ args == [1, 195] }}'
     sequence:
     - service: media_player.volume_down
-      target: !input media_player
+      entity_id: !input media_player
     - delay: 1
   - conditions:
     - '{{ trigger.id == 1 }}'
