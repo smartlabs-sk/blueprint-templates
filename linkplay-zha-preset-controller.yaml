@@ -39,10 +39,10 @@ trigger:
   entity_id: !input input_select
 action:
 - variables:
-    command: '{{ trigger.event.data.command }}'
-    cluster_id: '{{ trigger.event.data.cluster_id }}'
-    endpoint_id: '{{ trigger.event.data.endpoint_id }}'
-    args: '{{ trigger.event.data.args }}'
+    command: '{% if trigger.event %}{{ trigger.event.data.command }}{% endif %}'
+    cluster_id: '{% if trigger.event %}{{ trigger.event.data.cluster_id }}{% endif %}'
+    endpoint_id: '{% if trigger.event %}{{ trigger.event.data.endpoint_id }}{% endif %}'
+    args: '{% if trigger.event %}{{ trigger.event.data.args }}{% endif %}'
     media_player: !input media_player
     input_select: !input input_select
 - choose:
@@ -112,3 +112,4 @@ action:
       data:
         entity_id: '{{ media_player }}'
         preset: '{{ states.input_select.state }}'
+
