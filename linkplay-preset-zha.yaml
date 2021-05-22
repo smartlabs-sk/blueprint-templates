@@ -4,7 +4,7 @@ blueprint:
   description: |
     Select custom triggers to control pre-configured presets of a Linkplay media player.
     Currently supported controllers: IKEA Symfonisk
-  source_url: https://github.com/smartlabs-sk/blueprint-templates/linkplay-preset-zha.yaml
+  source_url: google.sk
   domain: automation
   input:
     media_player:
@@ -65,13 +65,23 @@ action:
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ args == [0, 1, 0] }}'
-    sequence: !input 'double_press'
+    sequence:
+    - service: input_select.select_next
+      target:
+        entity_id: !input input_select
+      data:
+        cycle: true 
   - conditions:
     - '{{ command == ''step'' }}'
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ args == [1, 1, 0] }}'
-    sequence: !input 'triple_press'
+    sequence:
+    - service: input_select.select_previous
+      target:
+        entity_id: !input input_select
+      data:
+        cycle: true 
   - conditions:
     - '{{ command == ''move'' }}'
     - '{{ cluster_id == 8 }}'
@@ -98,4 +108,3 @@ action:
       data:
         entity_id: '{{ media_player }}'
         preset: '{{ states.input_select.state }}'
-
