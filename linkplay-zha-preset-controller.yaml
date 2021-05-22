@@ -4,7 +4,7 @@ blueprint:
   description: |
     Select custom triggers to control pre-configured presets of a Linkplay media player.
     Currently supported controllers: IKEA Symfonisk
-  source_url: https://raw.githubusercontent.com/smartlabs-sk/blueprint-templates/main/linkplay-zha-preset.yaml
+  source_url: https://raw.githubusercontent.com/smartlabs-sk/blueprint-templates/main/linkplay-zha-preset-controller.yaml
   domain: automation
   input:
     media_player:
@@ -16,6 +16,9 @@ blueprint:
     input_select:
       name: Preset helper selector
       description: A dropdown helper with the list of all presets for the media player.
+      selector:
+        entity:
+          domain: input_select
     input_device_symfonisk:
       name: Symfonisk remote controller device
       description: The IKEA symfonisk remote controller
