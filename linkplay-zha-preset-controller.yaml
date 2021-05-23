@@ -66,6 +66,17 @@ action:
     - '{{ endpoint_id == 1 }}'
     - '{{ states[media_player].state == "playing" }}'
     sequence:
+    - wait_for_trigger:
+      - platform: event
+        event_type: zha_event
+        event_data:
+          device_id: !input input_device_symfonisk
+          endpoint_id: 1
+          cluster_id: 8
+          command: 'toggle'
+      timeout:
+        milliseconds: 500
+      continue_on_timeout: true
     - service: media_player.media_pause
       entity_id: !input 'media_player'
   - conditions:
@@ -75,6 +86,17 @@ action:
     - '{{ endpoint_id == 1 }}'
     - '{{ states[media_player].state != "playing" }}'
     sequence:
+    - wait_for_trigger:
+      - platform: event
+        event_type: zha_event
+        event_data:
+          device_id: !input input_device_symfonisk
+          endpoint_id: 1
+          cluster_id: 8
+          command: 'toggle'
+      timeout:
+        milliseconds: 500
+      continue_on_timeout: true
     - service: linkplay.preset
       data:
         entity_id: '{{ media_player }}'
