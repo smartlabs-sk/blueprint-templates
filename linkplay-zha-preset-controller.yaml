@@ -65,23 +65,27 @@ action:
     - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
     sequence:
-    - wait_for_trigger:
-      - platform: event
-        event_type: zha_event
-        event_data:
-          device_id: !input input_device_symfonisk
-          endpoint_id: 1
-          cluster_id: 8
-          command: 'toggle'
-      timeout:
-        milliseconds: 500
-      continue_on_timeout: true
-    - service: '{% if states[media_player].state != "playing" %}linkplay.preset{% else %}media_player.media_pause{% endif %}'
-      entity_id: !input media_player
-      data: >
-        {% if states[media_player].state != "playing" %}
-          preset: {{ states[input_select].state }}
-        {% endif %}
+      - wait_for_trigger:
+        - platform: event
+          event_type: zha_event
+          event_data:
+            device_id: !input input_device_symfonisk
+            endpoint_id: 1
+            cluster_id: 8
+            command: 'toggle'
+        timeout:
+          milliseconds: 500
+        continue_on_timeout: true
+      - choose:
+          - conditions: '{{ states[media_player].state != "playing" }}'
+            sequence:
+              - service: linkplay.preset
+                entity_id: !input media_player
+                data:
+                  preset: '{{ states[input_select].state }}'
+          default:
+            - service: media_player.media_pause
+            - entity_id: !input media_player
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
