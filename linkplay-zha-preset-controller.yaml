@@ -77,15 +77,17 @@ action:
           milliseconds: 500
         continue_on_timeout: true
       - choose:
-          - conditions: '{{ states[media_player].state != "playing" }}'
+          - conditions:
+              - condition: template
+                value_template: '{{ states[media_player].state != "playing" }}'
             sequence:
               - service: linkplay.preset
-                entity_id: !input media_player
                 data:
+                  entity_id: !input media_player
                   preset: '{{ states[input_select].state }}'
           default:
             - service: media_player.media_pause
-            - entity_id: !input media_player
+              entity_id: !input media_player
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
