@@ -75,8 +75,8 @@ action:
           cluster_id: 8
           command: 'toggle'
       timeout:
-        milliseconds: 500
-      continue_on_timeout: true
+        milliseconds: 1000
+      continue_on_timeout: false
     - service: media_player.media_pause
       entity_id: !input 'media_player'
   - conditions:
@@ -95,8 +95,8 @@ action:
           cluster_id: 8
           command: 'toggle'
       timeout:
-        milliseconds: 500
-      continue_on_timeout: true
+        milliseconds: 1000
+      continue_on_timeout: false
     - service: linkplay.preset
       data:
         entity_id: '{{ media_player }}'
