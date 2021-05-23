@@ -27,7 +27,7 @@ blueprint:
           integration: zha
           manufacturer: IKEA of Sweden
           model: SYMFONISK Sound Controller
-mode: single
+mode: restart
 max_exceeded: silent
 trigger:
 - platform: event
@@ -45,6 +45,20 @@ action:
     media_player: !input media_player
     input_select: !input input_select
 - choose:
+  - conditions:
+    - '{{ trigger.id == ''0'' }}'
+    - '{{ command == ''stop'' }}'
+    - '{{ cluster_id == 8 }}'
+    - '{{ endpoint_id == 1 }}'
+    sequence:
+    - delay: 0.1
+  - conditions:
+    - '{{ trigger.id == ''1'' }}'
+    sequence:
+    - service: linkplay.preset
+      data:
+        entity_id: '{{ media_player }}'
+        preset: '{{ states[input_select].state }}'
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''toggle'' }}'
@@ -96,29 +110,30 @@ action:
         entity_id: '{{ media_player }}'
         preset: '{{ states[input_select].state }}'
   - conditions:
-    - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''move'' }}'
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ args == [0, 195] }}'
     sequence:
-    - service: media_player.volume_up
-      entity_id: !input media_player
-    - delay: 1
+      repeat:
+        while:
+        - condition: template
+          value_template: "{{ repeat.index < 10 }}"
+        sequence:
+        - service: media_player.volume_up
+          entity_id: !input media_player
+        - delay: 0.1
   - conditions:
-    - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''move'' }}'
     - '{{ cluster_id == 8 }}'
     - '{{ endpoint_id == 1 }}'
     - '{{ args == [1, 195] }}'
     sequence:
-    - service: media_player.volume_down
-      entity_id: !input media_player
-    - delay: 1
-  - conditions:
-    - '{{ trigger.id == ''1'' }}'
-    sequence:
-    - service: linkplay.preset
-      data:
-        entity_id: '{{ media_player }}'
-        preset: '{{ states[input_select].state }}'
+      repeat:
+        while:
+        - condition: template
+          value_template: "{{ repeat.index < 10 }}"
+        sequence:
+        - service: media_player.volume_down
+          entity_id: !input media_player
+        - delay: 0.1
