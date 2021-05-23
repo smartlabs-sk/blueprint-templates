@@ -64,7 +64,6 @@ action:
     - '{{ command == ''toggle'' }}'
     - '{{ cluster_id == 6 }}'
     - '{{ endpoint_id == 1 }}'
-    - '{{ states[media_player].state == "playing" }}'
     sequence:
     - wait_for_trigger:
       - platform: event
@@ -75,32 +74,18 @@ action:
           cluster_id: 8
           command: 'toggle'
       timeout:
-        milliseconds: 1000
-      continue_on_timeout: false
-    - service: media_player.media_pause
-      entity_id: !input 'media_player'
-  - conditions:
-    - '{{ trigger.id == ''0'' }}'
-    - '{{ command == ''toggle'' }}'
-    - '{{ cluster_id == 6 }}'
-    - '{{ endpoint_id == 1 }}'
-    - '{{ states[media_player].state != "playing" }}'
-    sequence:
-    - wait_for_trigger:
-      - platform: event
-        event_type: zha_event
-        event_data:
-          device_id: !input input_device_symfonisk
-          endpoint_id: 1
-          cluster_id: 8
-          command: 'toggle'
-      timeout:
-        milliseconds: 1000
-      continue_on_timeout: false
-    - service: linkplay.preset
-      data:
-        entity_id: '{{ media_player }}'
-        preset: '{{ states[input_select].state }}'
+        milliseconds: 500
+      continue_on_timeout: true
+    - choose:
+      - conditions: '{{ states[media_player].state != "playing" }}'
+        sequence:
+          - service: linkplay.preset
+            data:
+              entity_id: '{{ media_player }}'
+              preset: '{{ states[input_select].state }}'
+        default:
+          - service: media_player.media_pause
+          entity_id: !input 'media_player'
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
