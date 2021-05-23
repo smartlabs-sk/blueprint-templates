@@ -75,7 +75,11 @@ action:
     - service: input_select.select_next
       entity_id: !input input_select
       data:
-        cycle: true 
+        cycle: true
+    - service: linkplay.preset
+      data:
+        entity_id: '{{ media_player }}'
+        preset: '{{ states[input_select].state }}'
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
@@ -87,6 +91,10 @@ action:
       entity_id: !input input_select
       data:
         cycle: true 
+    - service: linkplay.preset
+      data:
+        entity_id: '{{ media_player }}'
+        preset: '{{ states[input_select].state }}'
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''move'' }}'
