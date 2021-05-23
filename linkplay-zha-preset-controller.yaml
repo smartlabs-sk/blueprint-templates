@@ -78,8 +78,10 @@ action:
       continue_on_timeout: true
     - service: '{% if states[media_player].state != "playing" %}linkplay.preset{% else %}media_player.media_pause{% endif %}'
       entity_id: !input media_player
-      data:
-        preset: '{{ states[input_select].state }}'
+      data: >
+        {% if states[media_player].state != "playing" %}
+          preset: {{ states[input_select].state }}
+        {% endif %}
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
