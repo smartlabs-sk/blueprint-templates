@@ -85,9 +85,9 @@ action:
                 data:
                   entity_id: !input media_player
                   preset: '{{ states[input_select].state }}'
-          default:
-            - service: media_player.media_pause
-              entity_id: !input media_player
+        default:
+          - service: media_player.media_pause
+            entity_id: !input media_player
   - conditions:
     - '{{ trigger.id == ''0'' }}'
     - '{{ command == ''step'' }}'
